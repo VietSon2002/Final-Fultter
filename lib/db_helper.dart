@@ -20,7 +20,7 @@ class DBHelper {
               description TEXT,
               price REAL,
               image TEXT
-            )
+)
           ''');
         },
         version: 1,
@@ -71,7 +71,13 @@ class DBHelper {
     await initDatabase();
     await _database!.insert(
       'books',
-      book.toMap(),
+      {
+        'title': book.title,
+        'author': book.author,
+        'description': book.description,
+        'price': book.price,
+        'image': book.image,
+      },
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }

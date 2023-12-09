@@ -41,15 +41,22 @@ class _BookListState extends State<BookList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: books
-          .map((book) => BookItem(
-                book,
-                widget.dbHelper,
-                onDelete: deleteBook,
-                onEdit: () => navigateToEditBook(book.id),
-              ))
-          .toList(),
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4, // Số quyển sách trên mỗi hàng
+        crossAxisSpacing:
+            16.0, // Khoảng cách giữa các quyển sách theo chiều ngang
+        mainAxisSpacing: 16.0, // Khoảng cách giữa các hàng theo chiều dọc
+      ),
+      itemCount: books.length,
+      itemBuilder: (context, index) {
+        return BookItem(
+          books[index],
+          widget.dbHelper,
+          onDelete: deleteBook,
+          onEdit: () => navigateToEditBook(books[index].id),
+        );
+      },
     );
   }
 }
@@ -64,30 +71,44 @@ class BookItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Image.asset('assets/images/${book.image}', height: 100, width: 100),
-        Text(book.title,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-        Text('Tác giả: ${book.author}'),
-        Text('Mô tả: ${book.description}'),
-        Text('Giá tiền: ${book.price} VND'),
-        ElevatedButton(
-          onPressed: () => addToCart(book.id),
-          child: Text('Thêm vào giỏ hàng'),
-        ),
-        if (isAdmin) ...[
-          TextButton(
-            onPressed: onEdit,
-            child: Text('Chỉnh sửa'),
+    List<String> descriptionLines = book.description.split('\n');
+
+    // Chỉ lấy 2 dòng đầu của mô tả
+    String truncatedDescription = descriptionLines.take(2).join('\n');
+
+    return Container(
+      width: 460, // Đặt chiều rộng mong muốn
+      height: 250, // Đặt chiều cao mong muốn
+      child: Column(
+        children: [
+          Image.asset('assets/images/${book.image}', height: 180, width: 180),
+          Text(book.title,
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+          Text('Tác giả: ${book.author}'),
+          Text(
+            'Mô tả: $truncatedDescription',
+            maxLines: 2, // Chỉ hiển thị 2 dòng
+            overflow:
+                TextOverflow.ellipsis, // Hiển thị "..." khi vượt quá 2 dòng
           ),
-          TextButton(
-            onPressed: () => onDelete(book.id),
-            child: Text('Xóa sách'),
+          Text('Giá tiền: ${book.price}00 VND'),
+          ElevatedButton(
+            onPressed: () => addToCart(book.id),
+            child: Text('Thêm vào giỏ hàng'),
           ),
+          if (isAdmin) ...[
+            TextButton(
+              onPressed: onEdit,
+              child: Text('Chỉnh sửa'),
+            ),
+            TextButton(
+              onPressed: () => onDelete(book.id),
+              child: Text('Xóa sách'),
+            ),
+          ],
+          Divider(),
         ],
-        Divider(),
-      ],
+      ),
     );
   }
 
