@@ -5,9 +5,7 @@ import 'book.dart';
 class DBHelper {
   static Database? _database;
 
-  DBHelper() {
-    initDatabase();
-  }
+  DBHelper() {}
 
   Future<void> initDatabase() async {
     if (_database == null) {
@@ -15,14 +13,14 @@ class DBHelper {
         join(await getDatabasesPath(), 'bookstore_books.db'),
         onCreate: (db, version) {
           return db.execute('''
-          CREATE TABLE books(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            author TEXT,
-            description TEXT,
-            price REAL,
-            image TEXT
-          )
+            CREATE TABLE books(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              title TEXT,
+              author TEXT,
+              description TEXT,
+              price REAL,
+              image TEXT
+            )
           ''');
         },
         version: 1,
@@ -31,8 +29,7 @@ class DBHelper {
   }
 
   Future<List<Book>> getAllBooks() async {
-    await initDatabase(); // Đảm bảo rằng database đã được khởi tạo
-
+    await initDatabase();
     final List<Map<String, dynamic>> books = await _database!.query('books');
     return List.generate(books.length, (index) {
       return Book(
@@ -47,8 +44,7 @@ class DBHelper {
   }
 
   Future<void> deleteBook(int bookId) async {
-    await initDatabase(); // Đảm bảo rằng database đã được khởi tạo
-
+    await initDatabase();
     await _database!.delete(
       'books',
       where: 'id = ?',
@@ -62,8 +58,7 @@ class DBHelper {
   }
 
   Future<void> updateBook(Book book) async {
-    await initDatabase(); // Đảm bảo rằng database đã được khởi tạo
-
+    await initDatabase();
     await _database!.update(
       'books',
       book.toMap(),
@@ -73,12 +68,33 @@ class DBHelper {
   }
 
   Future<void> insertBook(Book book) async {
-    await initDatabase(); // Đảm bảo rằng database đã được khởi tạo
-
+    await initDatabase();
     await _database!.insert(
       'books',
       book.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+  }
+
+  Future<void> dispose() async {
+    await _database?.close();
+  }
+
+  // Log thông tin quyết định và thông tin debug
+  void log(String message) {
+    print('[DBHelper] $message');
+  }
+
+  Future<void> performDatabaseTransaction(
+      Future<void> Function(Transaction txn) action) async {
+    await initDatabase();
+    await _database!.transaction((txn) async {
+      try {
+        await action(txn);
+      } catch (e) {
+        log('Error during transaction: $e');
+        rethrow;
+      }
+    });
   }
 }

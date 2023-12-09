@@ -104,7 +104,12 @@ class AddBookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: () => navigateToAddBook(), child: Text('Thêm sách'));
+      onPressed: () {
+        // Chuyển hướng đến màn hình thêm sách
+        Navigator.pushNamed(context, '/addBook');
+      },
+      child: Text('Thêm sách'),
+    );
   }
 }
 
