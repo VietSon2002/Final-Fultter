@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'search_book.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -79,6 +80,8 @@ class CartButton extends StatelessWidget {
 }
 
 class SearchForm extends StatelessWidget {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -86,17 +89,32 @@ class SearchForm extends StatelessWidget {
         children: [
           Expanded(
             child: TextFormField(
+              controller: _searchController,
               decoration: InputDecoration(hintText: 'Nhập từ khóa tìm kiếm'),
+              onFieldSubmitted: (value) => search(context),
             ),
           ),
-          ElevatedButton(onPressed: () => search(), child: Text('Tìm kiếm')),
+          ElevatedButton(
+            onPressed: () => search(context),
+            child: Text('Tìm kiếm'),
+          ),
         ],
       ),
     );
   }
 
-  void search() {
+  void search(BuildContext context) {
+    String query = _searchController.text;
+
     // Xử lý tìm kiếm
+    if (query.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchBookScreen(query: query),
+        ),
+      );
+    }
   }
 }
 

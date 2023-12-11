@@ -71,22 +71,21 @@ class BookItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> descriptionLines = book.description.split('\n');
-
-    // Chỉ lấy 2 dòng đầu của mô tả
-    String truncatedDescription = descriptionLines.take(2).join('\n');
-
     return Container(
       width: 460, // Đặt chiều rộng mong muốn
       height: 250, // Đặt chiều cao mong muốn
       child: Column(
         children: [
           Image.asset('assets/images/${book.image}', height: 180, width: 180),
-          Text(book.title,
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+          Text(
+            book.title,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           Text('Tác giả: ${book.author}'),
           Text(
-            'Mô tả: $truncatedDescription',
+            'Mô tả: ${book.description}',
             maxLines: 2, // Chỉ hiển thị 2 dòng
             overflow:
                 TextOverflow.ellipsis, // Hiển thị "..." khi vượt quá 2 dòng

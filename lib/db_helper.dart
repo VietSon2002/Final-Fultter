@@ -28,6 +28,25 @@ class DBHelper {
     }
   }
 
+  Future<List<Book>> searchBooks(String keyword) async {
+    await initDatabase();
+    final List<Map<String, dynamic>> books = await _database!.query(
+      'books',
+      where: 'title LIKE ? OR author LIKE ? OR description LIKE ?',
+      whereArgs: ['%$keyword%', '%$keyword%', '%$keyword%'],
+    );
+    return List.generate(books.length, (index) {
+      return Book(
+        id: books[index]['id'],
+        title: books[index]['title'],
+        author: books[index]['author'],
+        description: books[index]['description'],
+        price: books[index]['price'],
+        image: books[index]['image'],
+      );
+    });
+  }
+
   Future<List<Book>> getAllBooks() async {
     await initDatabase();
     final List<Map<String, dynamic>> books = await _database!.query('books');
