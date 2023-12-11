@@ -9,7 +9,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWidget(), // Đây là nơi có thể xảy ra lỗi
+      appBar: AppBarWidget(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -21,7 +21,7 @@ class MyHomePage extends StatelessWidget {
             ),
             SearchForm(),
             SizedBox(height: 10),
-            if (isUseAdmin) AddBookButton(),
+            if (isAdmin) AddBookButton(),
             Expanded(
               child: BookList(dbHelper),
             ),

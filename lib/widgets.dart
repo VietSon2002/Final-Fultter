@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'search_book.dart';
+import 'register.dart';
+import 'book_list.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -10,12 +12,12 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset('assets/logo.png', height: 30, width: 30),
+          Image.asset('assets/logo.png', height: 50, width: 50),
           Row(
             children: [
               NavLink('Trang chủ'),
               NavLink('Sách'),
-              NavLink('Liên hệ'),
+              NavLink('Liên hệ', onPressed: () => showContactInfo(context)),
             ],
           ),
           AuthWidget(),
@@ -31,22 +33,47 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
 class NavLink extends StatelessWidget {
   final String title;
+  final VoidCallback? onPressed;
 
-  NavLink(this.title);
+  NavLink(this.title, {this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(title, style: TextStyle(color: Colors.white)),
+      child: InkWell(
+        onTap: onPressed,
+        child: Text(title, style: TextStyle(color: Colors.white)),
+      ),
     );
   }
+}
+
+void showContactInfo(BuildContext context) {
+  // Hiển thị thông tin liên hệ, ví dụ: sử dụng Dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Thông tin liên hệ'),
+        content: Text('Email: nguyenvietson2002@gmail.com\nPhone: 0363228610'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Đóng'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class AuthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (isLoggedIn) {
+    if (isAdmin) {
       return Row(
         children: [
           Text('Xin chào, $username!'),
@@ -59,8 +86,11 @@ class AuthWidget extends StatelessWidget {
         children: [
           ElevatedButton(onPressed: () => login(), child: Text('Đăng nhập')),
           SizedBox(width: 10),
-          Text('Chưa có tài khoản?'),
-          TextButton(onPressed: () => register(), child: Text('Đăng ký ngay')),
+          ElevatedButton(
+            onPressed: () => register(context),
+            child: Text('Đăng ký ngay'),
+          ),
+          SizedBox(width: 10),
         ],
       );
     }
@@ -130,15 +160,23 @@ class AddBookButton extends StatelessWidget {
   }
 }
 
-bool get isLoggedIn => true;
-bool get isUseAdmin => true;
 String get username => 'User';
 
 void login() {}
+
 void logout() {}
-void register() {}
+
+void register(BuildContext context) {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+}
+
 void search() {}
+
 void navigateToCart() {}
+
 void addToCart(int bookId) {}
+
 void navigateToAddBook() {}
+
 void navigateToEditBook(int bookId) {}

@@ -26,6 +26,7 @@ class _BookListState extends State<BookList> {
     setState(() {
       books = loadedBooks;
     });
+    setState(() {});
   }
 
   void deleteBook(int bookId) async {
@@ -136,4 +137,4 @@ class BookItem extends StatelessWidget {
   }
 }
 
-bool get isAdmin => true;
+bool get isAdmin => true; // thêm, sửa và xóa

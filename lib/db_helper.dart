@@ -10,18 +10,29 @@ class DBHelper {
   Future<void> initDatabase() async {
     if (_database == null) {
       _database = await openDatabase(
-        join(await getDatabasesPath(), 'bookstore_books.db'),
-        onCreate: (db, version) {
-          return db.execute('''
-            CREATE TABLE books(
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              title TEXT,
-              author TEXT,
-              description TEXT,
-              price REAL,
-              image TEXT
-)
-          ''');
+        join(await getDatabasesPath(), 'bookstore.db'),
+        onCreate: (db, version) async {
+          // Tạo bảng books
+          await db.execute('''
+          CREATE TABLE books(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            author TEXT,
+            description TEXT,
+            price REAL,
+            image TEXT
+          )
+        ''');
+
+          // Tạo bảng accounts
+          await db.execute('''
+          CREATE TABLE accounts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            password TEXT,
+            role TEXT
+          )
+        ''');
         },
         version: 1,
       );
@@ -145,5 +156,38 @@ class DBHelper {
         rethrow;
       }
     });
+  }
+
+  Future<void> insertAccount(String username, String password) async {
+    await initDatabase();
+    await _database!.insert(
+      'accounts',
+      {
+        'username': username,
+        'password': password,
+      },
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
+
+  Future<bool> isUsernameExists(String username) async {
+    await initDatabase();
+    final List<Map<String, dynamic>> result = await _database!.query(
+      'accounts',
+      where: 'username = ?',
+      whereArgs: [username],
+    );
+    return result.isNotEmpty;
+  }
+
+  Future<bool> validateLogin(String username, String password) async {
+    await initDatabase();
+    final List<Map<String, dynamic>> result = await _database!.query(
+      'accounts',
+      where: 'username = ? AND password = ?',
+      whereArgs: [username, password],
+    );
+
+    return result.isNotEmpty;
   }
 }
