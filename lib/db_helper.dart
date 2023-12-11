@@ -101,6 +101,30 @@ class DBHelper {
     );
   }
 
+  Future<Book> getBookById(int bookId) async {
+    await initDatabase();
+    final List<Map<String, dynamic>> books = await _database!.query(
+      'books',
+      where: 'id = ?',
+      whereArgs: [bookId],
+    );
+
+    if (books.isNotEmpty) {
+      return Book(
+        id: books[0]['id'],
+        title: books[0]['title'],
+        author: books[0]['author'],
+        description: books[0]['description'],
+        price: books[0]['price'],
+        image: books[0]['image'],
+      );
+    } else {
+      // Trả về một đối tượng Book rỗng hoặc xử lý tùy thuộc vào yêu cầu của bạn
+      return Book(
+          id: 0, title: '', author: '', description: '', price: 0.0, image: '');
+    }
+  }
+
   Future<void> dispose() async {
     await _database?.close();
   }

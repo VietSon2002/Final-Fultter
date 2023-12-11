@@ -1,3 +1,4 @@
+import 'package:bookstore/edit_book.dart';
 import 'package:flutter/material.dart';
 import 'book.dart';
 import 'db_helper.dart';
@@ -35,8 +36,21 @@ class _BookListState extends State<BookList> {
   }
 
   void navigateToEditBook(int bookId) {
-    // Nếu bạn có màn hình chỉnh sửa sách, bạn có thể sử dụng Navigator để chuyển đến đó
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => EditBookScreen(bookId)));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditBookScreen(
+          bookId: bookId,
+          dbHelper: widget.dbHelper,
+        ),
+      ),
+    ).then((result) {
+      // Sau khi quay lại từ màn hình chỉnh sửa, bạn có thể thực hiện các hành động cần thiết tại đây
+      // Ví dụ: load lại danh sách sách
+      if (result == true) {
+        loadBooks();
+      }
+    });
   }
 
   @override
@@ -72,41 +86,47 @@ class BookItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 460, // Đặt chiều rộng mong muốn
-      height: 250, // Đặt chiều cao mong muốn
-      child: Column(
-        children: [
-          Image.asset('assets/images/${book.image}', height: 180, width: 180),
-          Text(
-            book.title,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text('Tác giả: ${book.author}'),
-          Text(
-            'Mô tả: ${book.description}',
-            maxLines: 2, // Chỉ hiển thị 2 dòng
-            overflow:
-                TextOverflow.ellipsis, // Hiển thị "..." khi vượt quá 2 dòng
-          ),
-          Text('Giá tiền: ${book.price}00 VND'),
-          ElevatedButton(
-            onPressed: () => addToCart(book.id),
-            child: Text('Thêm vào giỏ hàng'),
-          ),
-          if (isAdmin) ...[
-            TextButton(
-              onPressed: onEdit,
-              child: Text('Chỉnh sửa'),
+      width: 460,
+      height: 250,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.asset('assets/images/${book.image}', height: 180, width: 180),
+            Text(
+              book.title,
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            TextButton(
-              onPressed: () => onDelete(book.id),
-              child: Text('Xóa sách'),
+            Text('Tác giả: ${book.author}'),
+            Text(
+              'Mô tả: ${book.description}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
+            Text('Giá tiền: ${book.price}00 VND'),
+            ElevatedButton(
+              onPressed: () => addToCart(book.id),
+              child: Text('Thêm vào giỏ hàng'),
+            ),
+            if (isAdmin)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: onEdit,
+                    child: Text('Chỉnh sửa'),
+                  ),
+                  SizedBox(width: 5),
+                  TextButton(
+                    onPressed: () => onDelete(book.id),
+                    child: Text('Xóa sách'),
+                  ),
+                ],
+              ),
+            Divider(),
           ],
-          Divider(),
-        ],
+        ),
       ),
     );
   }
