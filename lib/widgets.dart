@@ -1,4 +1,7 @@
+import 'package:bookstore/auth_provider.dart';
+import 'package:bookstore/login.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'search_book.dart';
 import 'register.dart';
 import 'book_list.dart';
@@ -73,24 +76,29 @@ void showContactInfo(BuildContext context) {
 class AuthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (isAdmin) {
+    final authProvider = context.watch<AuthProvider>();
+
+    if (authProvider.isLoggedIn) {
       return Row(
         children: [
-          Text('Xin chào, $username!'),
+          Text('Xin chào, ${authProvider.username}!'),
           SizedBox(width: 10),
-          ElevatedButton(onPressed: () => logout(), child: Text('Đăng xuất')),
+          ElevatedButton(
+              onPressed: () => authProvider.logout(), child: Text('Đăng xuất')),
         ],
       );
     } else {
       return Row(
         children: [
-          ElevatedButton(onPressed: () => login(), child: Text('Đăng nhập')),
+          ElevatedButton(
+            onPressed: () => authProvider.login(context),
+            child: Text('Đăng nhập'),
+          ),
           SizedBox(width: 10),
           ElevatedButton(
             onPressed: () => register(context),
-            child: Text('Đăng ký ngay'),
+            child: Text('Đăng ký'),
           ),
-          SizedBox(width: 10),
         ],
       );
     }
@@ -132,12 +140,12 @@ class SearchForm extends StatelessWidget {
     );
   }
 
-  void search(BuildContext context) {
+  Future<void> search(BuildContext context) async {
     String query = _searchController.text;
 
     // Xử lý tìm kiếm
     if (query.isNotEmpty) {
-      Navigator.push(
+      await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SearchBookScreen(query: query),
@@ -160,18 +168,12 @@ class AddBookButton extends StatelessWidget {
   }
 }
 
-String get username => 'User';
-
-void login() {}
-
 void logout() {}
 
 void register(BuildContext context) {
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => RegisterScreen()));
 }
-
-void search() {}
 
 void navigateToCart() {}
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'db_helper.dart';
+import 'db_helper.dart'; // Import your DB helper file
 
 class LoginScreen extends StatefulWidget {
+  final void Function(String, String) onLogin;
+  LoginScreen({required this.onLogin});
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -34,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () => _Login(),
+              onPressed: () => _login(),
               child: Text('Đăng nhập'),
             ),
           ],
@@ -43,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _Login() async {
+  void _login() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
@@ -56,7 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (isValidLogin) {
       // Successful login
-      // Redirect to the home screen or perform any other actions
+      // Trả về tên người dùng cho màn hình gọi đến
+      widget.onLogin(
+          username, 'admin'); // Thay 'admin' bằng role từ database nếu có
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       // Handle unsuccessful login

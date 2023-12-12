@@ -1,4 +1,6 @@
+import 'package:bookstore/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'widgets.dart';
 import 'db_helper.dart';
 import 'book_list.dart';
@@ -8,6 +10,8 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    final bool isAdmin = authProvider.role == 'admin';
     return Scaffold(
       appBar: AppBarWidget(),
       body: Padding(

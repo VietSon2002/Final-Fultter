@@ -1,7 +1,9 @@
+import 'package:bookstore/auth_provider.dart';
 import 'package:bookstore/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:provider/provider.dart';
 import 'app.dart';
 import 'add_book.dart';
 import 'register.dart';
@@ -10,7 +12,12 @@ import 'login.dart';
 void main() {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +27,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/addBook': (context) => AddBookScreen(),
         '/register': (context) => RegisterScreen(),
-        '/login': (context) => LoginScreen(),
+        '/login': (context) => LoginScreen(
+              onLogin: (username, role) {
+                // Xử lý sau khi đăng nhập
+              },
+            ),
         '/home': (context) => MyHomePage(),
         // Các routes khác
       },

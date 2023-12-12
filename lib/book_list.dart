@@ -1,12 +1,15 @@
+import 'package:bookstore/auth_provider.dart';
 import 'package:bookstore/edit_book.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'book.dart';
 import 'db_helper.dart';
 
 class BookList extends StatefulWidget {
   final DBHelper dbHelper;
+  final int crossAxisCount;
 
-  BookList(this.dbHelper);
+  BookList(this.dbHelper, {this.crossAxisCount = 2});
 
   @override
   _BookListState createState() => _BookListState();
@@ -26,7 +29,6 @@ class _BookListState extends State<BookList> {
     setState(() {
       books = loadedBooks;
     });
-    setState(() {});
   }
 
   void deleteBook(int bookId) async {
@@ -58,7 +60,8 @@ class _BookListState extends State<BookList> {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4, // Số quyển sách trên mỗi hàng
+        crossAxisCount: widget.crossAxisCount,
+        //   crossAxisCount: 2, // Số quyển sách trên mỗi hàng
         crossAxisSpacing:
             16.0, // Khoảng cách giữa các quyển sách theo chiều ngang
         mainAxisSpacing: 16.0, // Khoảng cách giữa các hàng theo chiều dọc
@@ -86,6 +89,8 @@ class BookItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    final bool isAdmin = authProvider.role == 'admin';
     return Container(
       width: 460,
       height: 250,
@@ -137,4 +142,4 @@ class BookItem extends StatelessWidget {
   }
 }
 
-bool get isAdmin => true; // thêm, sửa và xóa
+bool get isAdmin => false; // thêm, sửa và xóa
