@@ -84,7 +84,9 @@ class AuthWidget extends StatelessWidget {
           Text('Xin chào, ${authProvider.username}!'),
           SizedBox(width: 10),
           ElevatedButton(
-              onPressed: () => authProvider.logout(), child: Text('Đăng xuất')),
+            onPressed: () => authProvider.logout(context),
+            child: Text('Đăng xuất'),
+          ),
         ],
       );
     } else {
@@ -178,7 +180,3 @@ void register(BuildContext context) {
 void navigateToCart() {}
 
 void addToCart(int bookId) {}
-
-void navigateToAddBook() {}
-
-void navigateToEditBook(int bookId) {}

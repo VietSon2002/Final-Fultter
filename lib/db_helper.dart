@@ -158,13 +158,15 @@ class DBHelper {
     });
   }
 
-  Future<void> insertAccount(String username, String password) async {
+  Future<void> insertAccount(String username, String password,
+      {String role = ''}) async {
     await initDatabase();
     await _database!.insert(
       'accounts',
       {
         'username': username,
         'password': password,
+        'role': role,
       },
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
@@ -180,7 +182,8 @@ class DBHelper {
     return result.isNotEmpty;
   }
 
-  Future<bool> validateLogin(String username, String password) async {
+  Future<Map<String, dynamic>> validateLogin(
+      String username, String password) async {
     await initDatabase();
     final List<Map<String, dynamic>> result = await _database!.query(
       'accounts',
@@ -188,6 +191,10 @@ class DBHelper {
       whereArgs: [username, password],
     );
 
-    return result.isNotEmpty;
+    if (result.isNotEmpty) {
+      return result[0];
+    } else {
+      return {};
+    }
   }
 }

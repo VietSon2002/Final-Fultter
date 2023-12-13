@@ -26,10 +26,11 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  void logout() {
-    // Logic đăng xuất
+  void logout(BuildContext context) {
     _isLoggedIn = false;
-    _username = 'Khách';
+    _username = '';
     notifyListeners();
+    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/home');
   }
 }

@@ -54,16 +54,13 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final bool isValidLogin = await _dbHelper.validateLogin(username, password);
+    Map<String, dynamic> userInfo =
+        await _dbHelper.validateLogin(username, password);
 
-    if (isValidLogin) {
-      // Successful login
-      // Trả về tên người dùng cho màn hình gọi đến
-      widget.onLogin(
-          username, 'admin'); // Thay 'admin' bằng role từ database nếu có
+    if (userInfo.isNotEmpty) {
+      widget.onLogin(username, userInfo['role']);
       Navigator.pushReplacementNamed(context, '/home');
     } else {
-      // Handle unsuccessful login
       print('Login failed. Please check your credentials.');
     }
   }

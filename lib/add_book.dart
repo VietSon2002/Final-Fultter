@@ -1,3 +1,4 @@
+import 'package:bookstore/home_page.dart';
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
 import 'book.dart';
@@ -123,5 +124,11 @@ class _AddBookScreenState extends State<AddBookScreen> {
 
     // Quay về màn hình trước đó
     Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyHomePage(),
+      ),
+    );
   }
 }

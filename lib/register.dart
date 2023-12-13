@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     // Thêm thông tin người dùng mới vào cơ sở dữ liệu
-    await _dbHelper.insertAccount(username, password);
+    await _dbHelper.insertAccount(username, password, role: '1');
 
     // Hiển thị thông báo đăng ký thành công
     showDialog(

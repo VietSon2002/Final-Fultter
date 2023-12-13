@@ -1,3 +1,4 @@
+import 'package:bookstore/home_page.dart';
 import 'package:flutter/material.dart';
 import 'book.dart';
 import 'db_helper.dart';
@@ -94,5 +95,11 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
     // Đóng màn hình chỉnh sửa và quay lại màn hình trước đó
     Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyHomePage(),
+      ),
+    );
   }
 }

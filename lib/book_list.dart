@@ -7,9 +7,8 @@ import 'db_helper.dart';
 
 class BookList extends StatefulWidget {
   final DBHelper dbHelper;
-  final int crossAxisCount;
 
-  BookList(this.dbHelper, {this.crossAxisCount = 2});
+  BookList(this.dbHelper);
 
   @override
   _BookListState createState() => _BookListState();
@@ -60,8 +59,7 @@ class _BookListState extends State<BookList> {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.crossAxisCount,
-        //   crossAxisCount: 2, // Số quyển sách trên mỗi hàng
+        crossAxisCount: 2,
         crossAxisSpacing:
             16.0, // Khoảng cách giữa các quyển sách theo chiều ngang
         mainAxisSpacing: 16.0, // Khoảng cách giữa các hàng theo chiều dọc
@@ -91,6 +89,7 @@ class BookItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final bool isAdmin = authProvider.role == 'admin';
+
     return Container(
       width: 460,
       height: 250,
