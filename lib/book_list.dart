@@ -109,7 +109,7 @@ class BookItem extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            Text('Giá tiền: ${book.price}00 VND'),
+            Text('Giá tiền: ${book.price}00 VNĐ'),
             ElevatedButton(
               onPressed: () => addToCart(book.id),
               child: Text('Thêm vào giỏ hàng'),

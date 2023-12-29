@@ -1,3 +1,5 @@
+import 'package:bookstore/cart.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'book.dart';
@@ -83,8 +85,7 @@ class DBHelper {
   }
 
   Future<void> addToCart(int bookId) async {
-    // Thực hiện hành động thêm sách vào giỏ hàng
-    // Ví dụ: Cart.addToCart(bookId);
+    Cart.addToCart(bookId);
   }
 
   Future<void> updateBook(Book book) async {

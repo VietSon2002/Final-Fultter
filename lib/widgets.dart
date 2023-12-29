@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'search_book.dart';
 import 'register.dart';
 import 'book_list.dart';
+import 'cart.dart';
+import 'shopping_cart_screen.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -110,10 +112,21 @@ class AuthWidget extends StatelessWidget {
 class CartButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    int cartItemCount = 0;
+    int cartItemCount = Cart.getCartItems().length;
+
     return ElevatedButton(
-      onPressed: () => navigateToCart(),
-      child: Text('Giỏ hàng ($cartItemCount)'),
+      onPressed: () => navigateToCart(context),
+      child: Text('Giỏ hàng'),
+    );
+  }
+
+  void navigateToCart(BuildContext context) {
+    // Chuyển hướng đến màn hình giỏ hàng
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShoppingCartScreen(),
+      ),
     );
   }
 }
@@ -176,7 +189,3 @@ void register(BuildContext context) {
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => RegisterScreen()));
 }
-
-void navigateToCart() {}
-
-void addToCart(int bookId) {}
