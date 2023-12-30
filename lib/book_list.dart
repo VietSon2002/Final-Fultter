@@ -47,8 +47,6 @@ class _BookListState extends State<BookList> {
         ),
       ),
     ).then((result) {
-      // Sau khi quay lại từ màn hình chỉnh sửa, bạn có thể thực hiện các hành động cần thiết tại đây
-      // Ví dụ: load lại danh sách sách
       if (result == true) {
         loadBooks();
       }
@@ -111,7 +109,15 @@ class BookItem extends StatelessWidget {
             ),
             Text('Giá tiền: ${book.price}00 VNĐ'),
             ElevatedButton(
-              onPressed: () => addToCart(book.id),
+              onPressed: () {
+                addToCart(book.id);
+                // Show a snackbar when the book is added to the cart
+                final snackBar = SnackBar(
+                  content: Text('Sách đã được thêm vào giỏ hàng'),
+                  duration: Duration(seconds: 1),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
               child: Text('Thêm vào giỏ hàng'),
             ),
             if (isAdmin)

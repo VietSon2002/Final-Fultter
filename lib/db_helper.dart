@@ -45,8 +45,8 @@ class DBHelper {
     await initDatabase();
     final List<Map<String, dynamic>> books = await _database!.query(
       'books',
-      where: 'title LIKE ? OR author LIKE ? OR description LIKE ?',
-      whereArgs: ['%$keyword%', '%$keyword%', '%$keyword%'],
+      where: 'title LIKE ? OR author LIKE ?',
+      whereArgs: ['%$keyword%', '%$keyword%'],
     );
     return List.generate(books.length, (index) {
       return Book(

@@ -9,7 +9,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final TextEditingController _passwordComfirmController =
+      TextEditingController();
   DBHelper _dbHelper = DBHelper();
 
   @override
@@ -33,6 +34,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: InputDecoration(labelText: 'Mật khẩu'),
               obscureText: true,
             ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _passwordComfirmController,
+              decoration: InputDecoration(labelText: 'Xác nhận Mật khẩu'),
+              obscureText: true,
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
@@ -49,12 +56,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
-
-    if (username.isEmpty || password.isEmpty) {
-      // Hiển thị thông báo lỗi khi thông tin đăng ký không hợp lệ
+    String passwordcomfirm = _passwordComfirmController.text.trim();
+    if (password == passwordcomfirm) {
+      if (username.isEmpty || password.isEmpty) {
+        // Hiển thị thông báo lỗi khi thông tin đăng ký không hợp lệ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Vui lòng nhập đầy đủ thông tin đăng ký.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Vui lòng nhập đầy đủ thông tin đăng ký.'),
+          content: Text('Phải nhập trùng khớp với mật khẩu'),
           backgroundColor: Colors.red,
         ),
       );
@@ -75,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     // Thêm thông tin người dùng mới vào cơ sở dữ liệu
-    await _dbHelper.insertAccount(username, password, role: '1');
+    await _dbHelper.insertAccount(username, password, role: 'user');
 
     // Hiển thị thông báo đăng ký thành công
     showDialog(
